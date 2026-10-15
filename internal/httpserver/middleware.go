@@ -209,6 +209,13 @@ func setRateLimitHeaders(responseWriter http.ResponseWriter, state rateLimitStat
 	responseWriter.Header().Set("RateLimit-Reset", strconv.FormatInt(state.resetAt.Unix()+boolToInt64(state.resetAt.Nanosecond() > 0), 10))
 }
 
+func setNoSniffHeader(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(responseWriter http.ResponseWriter, request *http.Request) {
+		responseWriter.Header().Set("X-Content-Type-Options", "nosniff")
+		next.ServeHTTP(responseWriter, request)
+	})
+}
+
 func clientIPKey(request *http.Request) string {
 	host, _, err := net.SplitHostPort(request.RemoteAddr)
 	if err == nil && host != "" {
