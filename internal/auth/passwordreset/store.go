@@ -31,6 +31,9 @@ func NewStore(database *sql.DB) *Store {
 }
 
 func (store *Store) Create(ctx context.Context, userID int64) (Token, error) {
+	key := make([]byte, 32)
+	rand.Read(key)
+	value := 
 	now := store.now().UTC()
 	value := fmt.Sprintf("reset-%d-%d", userID, now.UnixNano())
 	expiresAt := now.Add(tokenTTL)
