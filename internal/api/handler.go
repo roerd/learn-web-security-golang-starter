@@ -108,7 +108,7 @@ func (handler *Handler) WarehouseOrders(responseWriter http.ResponseWriter, requ
 		return
 	}
 	scopes := strings.Split(key.Scope, ",")
-	if slices.Contains(scopes, "orders:read") {
+	if !slices.Contains(scopes, "orders:read") {
 		httpx.RespondWithError(responseWriter, 403, "API key is missing the orders:read scope")
 	}
 	orders, err := handler.orderStore.ListAll(request.Context())
